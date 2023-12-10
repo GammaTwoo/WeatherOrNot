@@ -2,8 +2,12 @@ const dateEl = document.getElementById('date')
 const currentWeatherEl = document.getAnimations('currentWeatherItems')
 const timezone = document.getElementById('timezone')
 const countryEl = document.getElementById('country')
-const weatherForecastEl = document.getElementById('weatherForecast')
+// const weatherForecastEl = document.getElementById('weatherForecast')
 const currentTempEl = document.getElementById('currentTemp')
+const submitBtn = document.getElementById('searchBtn')
+const cityInput = document.getElementById('cityInput')
+const stateInput = document.getElementById('stateInput')
+const countryInput = document.getElementById('countryInput')
 
 const API_KEY = '3f86d4785d1c130f4095c54be0cdfbd6'
 
@@ -27,34 +31,65 @@ setInterval(() => {
 
 }, 1000)
 
-function showCurrentWeather() {
+function showFutureData(forecast) {
 
 }
 
-function showForecastData() {
-
+function showCurrentData(weather) {
+    // console.log(weather)
+    const { temp, humidity, pressure, dt } = weather
+    console.log(temp)
+    console.log(humidity)
+    console.log(pressure)
+    console.log(dt)
 }
 
-function getForecast() {
-    navigator.geolocation.getCurrentPosition((data) => {
-        console.log(data)
-        let { latitude , longitude } = data.coords
-
-        fetch(`
-        https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly&appid=${API_KEY}
-        `).then(res => res.json()).then(data => {
-            console.log(data)
+function getForecast(latitude, longitude) {
+    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly&units=imperial&appid=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+            const current = data.current
+            const future = data.daily.slice(1, 6)
+            showCurrentData(current)
+            showFutureData(future)
         })
+}
 
-        fetch(`
-        https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}
-        `).then(res => res.json()).then(data => {
-            console.log(data)
+function getGeolocation(city, state, country) {
+    let stateFinal
+    if (!state) {
+        stateFinal = ''
+    } else {
+        stateFinal = `${state},`
+    }
 
-            showForecastData(data)
-        })
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city},${stateFinal}${country}&limit=5&appid=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+            let lat
+            let lon
+            for(let i of data) {
+                lat = i.lat
+                lon = i.lon
+            }
+            getForecast(lat, lon)
+            // getForecast(lat, lon)
     })
-
-    
 }
-getForecast()
+
+submitBtn.addEventListener('click', () => {
+    let city = cityInput.value
+    let state = stateInput.value
+    let country = countryInput.value
+    getGeolocation(city, state, country)
+})
+
+
+//        _------.
+//       /  ,     \_
+//     /   /  /{}\ |o\_
+//    /    \  `--' /-' \
+//   |      \      \    |
+//  |              |`-, |
+//  /              /__/)/
+// |              | Eagle with rizz
