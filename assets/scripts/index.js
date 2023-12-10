@@ -30,13 +30,43 @@ setInterval(() => {
 
 }, 1000)
 
-function capitalizeEveryWord(str) {
+function capitalize(str) {
     return str.replace(/\b\w/g, function (char) {
       return char.toUpperCase();
     })
   }
 
 function showFutureData(forecast) {
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+    const futureForecastEl = document.getElementById('futureForecast')
+    let date
+    let dayOfWeek
+    let day
+    let forecastPartial
+    let description
+    for ( let i = 0 ; i < forecast.length ; i++ ) {
+        let { dt, temp, weather } = forecast[i]
+        date = new Date(dt * 1000)
+        dayOfWeek = date.getDay()
+        day = days[dayOfWeek]
+        for (let j of weather) {
+            description = capitalize(j.description)
+        }
+
+        forecastPartial = document.createElement(`div`)
+            forecastPartial.classList.add('weather-forecast')
+            forecastPartial.id = `weatherForecast${day}`
+        forecastPartial.innerHTML = `
+            <div class="forecast-item">
+                <div class="day">${day}</div>
+                <img src="" alt="" class="icon">
+                <div class="summary" id="summary">${description}</div>
+                <div class="temp">High: ${temp.max}° F</div>
+                <div class="temp">Low ${temp.min}° F</div>
+            </div>
+        `
+        futureForecastEl.appendChild(forecastPartial)
+    }
     console.log(forecast)
 }
 
@@ -47,7 +77,7 @@ function showCurrentData(weather) {
     for (let i of summaryArray) {
         summaryLower = i.description
     }
-    let summary = capitalizeEveryWord(summaryLower)
+    let summary = capitalize(summaryLower)
     const pressureInBar = pressure * 0.001
 
     const tempEl = document.getElementById('currentTemp')
@@ -56,7 +86,7 @@ function showCurrentData(weather) {
     const windEl = document.getElementById('windSpeed')
     const summaryEl = document.getElementById('summary')
 
-    tempEl.textContent = `${temp}° F `
+    tempEl.textContent = `${temp}° F`
     humidityEl.lastChild.textContent = `${humidity}%`
     pressureEl.lastChild.textContent = `${pressureInBar} bar`
     windEl.lastChild.textContent = `${wind_speed} mph`
