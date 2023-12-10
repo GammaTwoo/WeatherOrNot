@@ -27,11 +27,11 @@ setInterval(() => {
 
 }, 1000)
 
-function showForecastData() {
+function showCurrentWeather() {
 
 }
 
-function getCurrentWeather() {
+function showForecastData() {
 
 }
 
@@ -41,7 +41,13 @@ function getForecast() {
         let { latitude , longitude } = data.coords
 
         fetch(`
-        https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}
+        https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly&appid=${API_KEY}
+        `).then(res => res.json()).then(data => {
+            console.log(data)
+        })
+
+        fetch(`
+        https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}
         `).then(res => res.json()).then(data => {
             console.log(data)
 
