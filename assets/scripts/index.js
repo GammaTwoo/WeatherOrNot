@@ -1,0 +1,1 @@
+let weatherKey = '3f86d4785d1c130f4095c54be0cdfbd6'
