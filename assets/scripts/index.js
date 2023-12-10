@@ -1,14 +1,17 @@
-const dateEl = document.getElementById('date')
 const currentWeatherEl = document.getAnimations('currentWeatherItems')
 const timezone = document.getElementById('timezone')
 const countryEl = document.getElementById('country')
-const weatherForecastEl = document.getElementById('weatherForecast')
-const currentTempEl = document.getElementById('currentTemp')
+// const weatherForecastEl = document.getElementById('weatherForecast')
+const submitBtn = document.getElementById('searchBtn')
+const cityInput = document.getElementById('cityInput')
+const stateInput = document.getElementById('stateInput')
+const countryInput = document.getElementById('countryInput')
 
 const API_KEY = '3f86d4785d1c130f4095c54be0cdfbd6'
 
 setInterval(() => {
     const timeEl = document.getElementById('time')
+    const dateEl = document.getElementById('date')
     const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -27,34 +30,115 @@ setInterval(() => {
 
 }, 1000)
 
-function showCurrentWeather() {
-
-}
-
-function showForecastData() {
-
-}
-
-function getForecast() {
-    navigator.geolocation.getCurrentPosition((data) => {
-        console.log(data)
-        let { latitude , longitude } = data.coords
-
-        fetch(`
-        https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly&appid=${API_KEY}
-        `).then(res => res.json()).then(data => {
-            console.log(data)
-        })
-
-        fetch(`
-        https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=imperial&appid=${API_KEY}
-        `).then(res => res.json()).then(data => {
-            console.log(data)
-
-            showForecastData(data)
-        })
+function capitalize(str) {
+    return str.replace(/\b\w/g, function (char) {
+      return char.toUpperCase();
     })
+  }
 
-    
+function showFutureData(forecast) {
+    const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
+    const futureForecastEl = document.getElementById('futureForecast')
+    let date
+    let dayOfWeek
+    let day
+    let forecastPartial
+    let description
+    for ( let i = 0 ; i < forecast.length ; i++ ) {
+        let { dt, temp, weather } = forecast[i]
+        date = new Date(dt * 1000)
+        dayOfWeek = date.getDay()
+        day = days[dayOfWeek]
+        for (let j of weather) {
+            description = capitalize(j.description)
+        }
+
+        forecastPartial = document.createElement(`div`)
+            forecastPartial.classList.add('weather-forecast')
+            forecastPartial.id = `weatherForecast${day}`
+        forecastPartial.innerHTML = `
+            <div class="forecast-item">
+                <div class="day">${day}</div>
+                <img src="" alt="" class="icon">
+                <div class="summary" id="summary">${description}</div>
+                <div class="temp">High: ${temp.max}° F</div>
+                <div class="temp">Low ${temp.min}° F</div>
+            </div>
+        `
+        futureForecastEl.appendChild(forecastPartial)
+    }
+    console.log(forecast)
 }
-getForecast()
+
+function showCurrentData(weather) {
+    const { temp, humidity, pressure, wind_speed } = weather
+    let summaryLower
+    const summaryArray = weather.weather
+    for (let i of summaryArray) {
+        summaryLower = i.description
+    }
+    let summary = capitalize(summaryLower)
+    const pressureInBar = pressure * 0.001
+
+    const tempEl = document.getElementById('currentTemp')
+    const humidityEl = document.getElementById('humidity')
+    const pressureEl = document.getElementById('pressure')
+    const windEl = document.getElementById('windSpeed')
+    const summaryEl = document.getElementById('summary')
+
+    tempEl.textContent = `${temp}° F`
+    humidityEl.lastChild.textContent = `${humidity}%`
+    pressureEl.lastChild.textContent = `${pressureInBar} bar`
+    windEl.lastChild.textContent = `${wind_speed} mph`
+    summaryEl.textContent = `${summary}`
+}
+
+function getForecast(latitude, longitude) {
+    fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${latitude}&lon=${longitude}&exclude=minutely,hourly&units=imperial&appid=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+            const current = data.current
+            const future = data.daily.slice(1, 6)
+            showCurrentData(current)
+            showFutureData(future)
+        })
+}
+
+function getGeolocation(city, state, country) {
+    let stateFinal
+    if (!state) {
+        stateFinal = ''
+    } else {
+        stateFinal = `${state},`
+    }
+
+    fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city},${stateFinal}${country}&limit=5&appid=${API_KEY}`)
+        .then(res => res.json())
+        .then(data => {
+            let lat
+            let lon
+            for(let i of data) {
+                lat = i.lat
+                lon = i.lon
+            }
+            getForecast(lat, lon)
+            // getForecast(lat, lon)
+    })
+}
+
+submitBtn.addEventListener('click', () => {
+    let city = cityInput.value
+    let state = stateInput.value
+    let country = countryInput.value
+    getGeolocation(city, state, country)
+})
+
+
+//        _------.
+//       /  ,     \_
+//     /   /  /{}\ |o\_
+//    /    \  `--' /-' \
+//   |      \      \    |
+//  |              |`-, |
+//  /              /__/)/
+// |              | Eagle with rizz

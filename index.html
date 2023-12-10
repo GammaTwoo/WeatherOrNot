@@ -10,9 +10,17 @@
 <body>
     
     <div class="container">
+        <div class="search" id="search">
+            <input type="text" class="location-input" id="cityInput">
+            <input type="text" id="stateInput" class="state-input">
+            <input type="text" id="countryInput" class="country-input">
+            <button type="submit" class="search-btn" id="searchBtn">Submit</button>
+            <ul class="history" id="history">
+
+            </ul>
+        </div>
+
         <div class="current-info">
-
-
             <div class="date-container">
                 <div class="time" id="time">
                     0:00 <span class="meridian">N/A</span>
@@ -21,41 +29,41 @@
                 <div class="date" id="date">
                     Someday, Not 33
                 </div>
-
+                
                 <div class="other" id="currentWeatherItems">
-                    <div class="weather-item">
+                    <div class="temp" id="currentTemp">
+
+                    </div>
+
+                    <div class="weather-item" id="humidity">
                         <div>Humidity</div>
-                        <div>91.6%</div>
+                        <div></div>
                     </div>
 
-                    <div class="weather-item">
+                    <div class="weather-item" id="pressure">
                         <div>Pressure</div>
-                        <div>One Million PSI</div>
+                        <div></div>
                     </div>
 
-                    <div class="weather-item">
+                    <div class="weather-item" id="windSpeed">
                         <div>Wind Speed</div>
-                        <div>5.4mph</div>
+                        <div></div>
+                    </div>
+
+                    <div class="weather-item" id="summary">
+
                     </div>
                 </div>
             </div>
 
             <div class="place-container">
-                <div class="timezone" id="timezone">EST</div>
-                <div class="country" id="country">US</div>
+                <div class="timezone" id="timezone"></div>
+                <div class="country" id="country"></div>
             </div>
-
         </div>
 
-        <div class="future-forecast">
-            <div class="today" id="currentTemp">
-                <img src="" alt="" class="icon">
-                <div class="day">Monday</div>
-                <div class="temp">Day: 95&#176; F</div>
-                <div class="temp">Night: 75&#176; F</div>
-            </div>
-
-            <div class="weather-forecast" id="weatherForecast">
+        <div class="future-forecast" id="futureForecast">
+            <!-- <div class="weather-forecast" id="weatherForecast">
                 <div class="forecast-item">
                     <div class="day">Tues</div>
                     <img src="" alt="" class="icon">
@@ -98,10 +106,11 @@
                     <div class="temp">Day:</div>
                     <div class="temp">Night:</div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 
+    <script src="https://kit.fontawesome.com/2cc7bbc68a.js" crossorigin="anonymous"></script>
     <script src="./assets/scripts/index.js"></script>
 </body>
 </html>
