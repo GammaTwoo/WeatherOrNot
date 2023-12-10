@@ -1,4 +1,3 @@
-const timeEl = document.getElementById('time')
 const dateEl = document.getElementById('date')
 const currentWeatherEl = document.getAnimations('currentWeatherItems')
 const timezone = document.getElementById('timezone')
@@ -8,3 +7,22 @@ const currentTempEl = document.getElementById('currentTemp')
 
 let weatherKey = '3f86d4785d1c130f4095c54be0cdfbd6'
 
+setInterval(() => {
+    const timeEl = document.getElementById('time')
+    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+    const time = new Date()
+    const month = time.getMonth()
+    const date = time.getDate()
+    const day = time.getDay()
+    const hour = time.getHours()
+    const hour12 = hour >= 13 ? hour %12: hour
+    const minutes = time.getMinutes()
+    const meridian = hour <= 12 ? 'AM' : 'PM'
+
+    timeEl.innerHTML = `${hour12}:${minutes} <span id="meridian">${meridian}</span>`
+
+    dateEl.innerHTML = `${days[day]}, ${months[month]} ${date}`
+
+}, 1000)
