@@ -1,9 +1,7 @@
-const dateEl = document.getElementById('date')
 const currentWeatherEl = document.getAnimations('currentWeatherItems')
 const timezone = document.getElementById('timezone')
 const countryEl = document.getElementById('country')
 // const weatherForecastEl = document.getElementById('weatherForecast')
-const currentTempEl = document.getElementById('currentTemp')
 const submitBtn = document.getElementById('searchBtn')
 const cityInput = document.getElementById('cityInput')
 const stateInput = document.getElementById('stateInput')
@@ -13,6 +11,7 @@ const API_KEY = '3f86d4785d1c130f4095c54be0cdfbd6'
 
 setInterval(() => {
     const timeEl = document.getElementById('time')
+    const dateEl = document.getElementById('date')
     const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday']
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -31,17 +30,37 @@ setInterval(() => {
 
 }, 1000)
 
-function showFutureData(forecast) {
+function capitalizeEveryWord(str) {
+    return str.replace(/\b\w/g, function (char) {
+      return char.toUpperCase();
+    })
+  }
 
+function showFutureData(forecast) {
+    console.log(forecast)
 }
 
 function showCurrentData(weather) {
-    // console.log(weather)
-    const { temp, humidity, pressure, dt } = weather
-    console.log(temp)
-    console.log(humidity)
-    console.log(pressure)
-    console.log(dt)
+    const { temp, humidity, pressure, wind_speed } = weather
+    let summaryLower
+    const summaryArray = weather.weather
+    for (let i of summaryArray) {
+        summaryLower = i.description
+    }
+    let summary = capitalizeEveryWord(summaryLower)
+    const pressureInBar = pressure * 0.001
+
+    const tempEl = document.getElementById('currentTemp')
+    const humidityEl = document.getElementById('humidity')
+    const pressureEl = document.getElementById('pressure')
+    const windEl = document.getElementById('windSpeed')
+    const summaryEl = document.getElementById('summary')
+
+    tempEl.textContent = `${temp}° F `
+    humidityEl.lastChild.textContent = `${humidity}%`
+    pressureEl.lastChild.textContent = `${pressureInBar} bar`
+    windEl.lastChild.textContent = `${wind_speed} mph`
+    summaryEl.textContent = `${summary}`
 }
 
 function getForecast(latitude, longitude) {
