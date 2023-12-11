@@ -14,8 +14,10 @@ function loadHistory(history) {
     historyEl.textContent = ''
     const fragment = document.createDocumentFragment()
     for ( let i = 0 ; i < history.length ; i++ ) {
-        const newLiEl = document.createElement('li')
+        const newLiEl = document.createElement('button')
         newLiEl.classList.add(`history-${i}`)
+        newLiEl.classList.add('list-group-item')
+        newLiEl.classList.add('list-group-item-action')
         newLiEl.textContent = `${history[i]}`
         fragment.appendChild(newLiEl)
 
@@ -58,15 +60,14 @@ function showFutureForecast(forecast) {
         
         const forecastPartial = document.createElement(`div`)
             forecastPartial.classList.add('weather-forecast')
+            forecastPartial.classList.add('col-3')
             forecastPartial.id = `weatherForecast${day}`
         forecastPartial.innerHTML = `
-        <div class="forecast-item">
         <div class="day">${day}</div>
         <img src="http://openweathermap.org/img/w/${icon}.png" alt="" class="icon">
         <div class="summary" id="summary">${description}</div>
         <div class="temp">High: ${temp.max}° F</div>
         <div class="temp">Low ${temp.min}° F</div>
-        </div>
         `
         futureForecastEl.appendChild(forecastPartial)
     }
