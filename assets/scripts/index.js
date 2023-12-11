@@ -11,12 +11,31 @@ const API_KEY = '3f86d4785d1c130f4095c54be0cdfbd6'
 
 function loadHistory(history) {
     const historyEl = document.getElementById('history')
+    historyEl.textContent = ''
     const fragment = document.createDocumentFragment()
     for ( let i = 0 ; i < history.length ; i++ ) {
         const newLiEl = document.createElement('li')
         newLiEl.classList.add(`history-${i}`)
         newLiEl.textContent = `${history[i]}`
         fragment.appendChild(newLiEl)
+
+        newLiEl.addEventListener('click', () => {
+            const [city, ...rest] = history[i].split(', ');
+            
+            let country, state;
+            
+            if (rest.length > 1) {
+                state = rest.shift();
+                country = rest.join(', ');
+            } else {
+                state = null;
+                country = rest[0];
+            }
+
+            futureForecastEl.innerHTML = '';
+            localStorageHandler(city, state, country);
+            fetchGeolocation(city, state, country);
+        })
     }
     historyEl.appendChild(fragment)
 }
@@ -31,8 +50,10 @@ function showFutureForecast(forecast) {
         const dayOfWeek = date.getDay()
         const day = days[dayOfWeek]
         let description
+        let icon
         for (let j of weather) {
             description = capitalize(j.description)
+            icon = j.icon
         }
         
         const forecastPartial = document.createElement(`div`)
@@ -41,7 +62,7 @@ function showFutureForecast(forecast) {
         forecastPartial.innerHTML = `
         <div class="forecast-item">
         <div class="day">${day}</div>
-        <img src="" alt="" class="icon">
+        <img src="http://openweathermap.org/img/w/${icon}.png" alt="" class="icon">
         <div class="summary" id="summary">${description}</div>
         <div class="temp">High: ${temp.max}° F</div>
         <div class="temp">Low ${temp.min}° F</div>
@@ -54,22 +75,26 @@ function showFutureForecast(forecast) {
 function showCurrentWeather(weather) {
     const { temp, humidity, pressure, wind_speed } = weather
     let summaryLower
+    let icon
     const summaryArray = weather.weather
     for (let i of summaryArray) {
         summaryLower = i.description
+        icon = i.icon
     }
     const summary = capitalize(summaryLower)
-    const pressureInBar = pressure * 0.001
+    const pressureInInHg = pressure * 0.02953
     
+    const img = document.getElementById('currentIcon')
     const tempEl = document.getElementById('currentTemp')
     const humidityEl = document.getElementById('humidity')
     const pressureEl = document.getElementById('pressure')
     const windEl = document.getElementById('windSpeed')
     const summaryEl = document.getElementById('summary')
     
+    img.setAttribute('src', `http://openweathermap.org/img/w/${icon}.png`)
     tempEl.textContent = `${temp}° F`
     humidityEl.lastChild.textContent = `${humidity}%`
-    pressureEl.lastChild.textContent = `${pressureInBar} bar`
+    pressureEl.lastChild.textContent = `${pressureInInHg} inHg`
     windEl.lastChild.textContent = `${wind_speed} mph`
     summaryEl.textContent = `${summary}`
 }
@@ -106,12 +131,15 @@ function fetchGeolocation(city, state, country) {
 function localStorageHandler(city, state, country) {
     const stateStr = state ? `${state}, ` : '';
     const placeStr = `${city}, ${stateStr}${country}`;
-    
-    historyArr.unshift(placeStr);
-    
-    localStorage.setItem('historyArr', JSON.stringify(historyArr));
-    
-    loadHistory(historyArr);
+
+    if (!historyArr.includes(placeStr)) {
+        historyArr.unshift(placeStr);
+        arrOfFive = historyArr.slice(0,5)
+        localStorage.setItem('historyArr', JSON.stringify(arrOfFive));
+        loadHistory(arrOfFive);
+    } else {
+        console.log(`${placeStr} already exists in historyArr.`);
+    }
 }
 
 function init() {
