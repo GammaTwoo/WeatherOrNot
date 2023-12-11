@@ -9,66 +9,73 @@
 </head>
 <body>
     
-    <div class="container">
-        <div class="search" id="search">
-            <input type="text" class="location-input" id="cityInput">
-            <input type="text" id="stateInput" class="state-input">
-            <input type="text" id="countryInput" class="country-input">
-            <button type="submit" class="search-btn" id="searchBtn">Submit</button>
-            <ul class="history" id="history">
-
-            </ul>
-        </div>
-
-        <div class="current-info">
-            <div class="date-container">
-                <div class="time" id="time">
-                    0:00 <span class="meridian">N/A</span>
-                </div>
-
-                <div class="date" id="date">
-                    Someday, Not 33
-                </div>
-                
-                <div class="other" id="currentWeatherItems">
-                    <div class="place" id="place">
-
+    <div class="container-fluid">
+        <h1>Weather or Not</h1>
+        <div class="row">
+            <div class="search container d-grid gap-2 col-4 " id="search">
+                <h2>Search</h2>
+                <input type="text" class="location-input" id="cityInput" placeholder="City">
+                <input type="text" id="stateInput" class="state-input" placeholder="State (if in US)">
+                <input type="text" id="countryInput" class="country-input" placeholder="Country">
+                <button type="submit" class="search-btn btn btn-primary btn-sm" id="searchBtn">Submit</button>
+                <ul class="history list-group" id="history">
+    
+                </ul>
+            </div>
+    
+            <div class="current-info container col 6">
+                <div class="current-container container">
+                    <div class="date-container container row">
+                        <h2 class="col-6">Current Weather</h2>
+                        <div class="time col" id="time">
+                            0:00 <span class="meridian">N/A</span>
+                        </div>
+        
+                        <div class="date col" id="date">
+                            Someday, Not 33
+                        </div>
                     </div>
-
-                    <div class="temp" id="currentTemp">
-
-                    </div>
-
-                    <div class="weather-item" id="humidity">
-                        <div>Humidity</div>
-                        <div></div>
-                    </div>
-
-                    <div class="weather-item" id="pressure">
-                        <div>Pressure</div>
-                        <div></div>
-                    </div>
-
-                    <div class="weather-item" id="windSpeed">
-                        <div>Wind Speed</div>
-                        <div></div>
-                    </div>
-
-                    <img src="" alt="" class="weather-item" id="currentIcon">
-                 
-
-                    <div class="weather-item" id="summary">
-
+                    
+                    <div class="other" id="currentWeatherItems">  
+                        <div class="data row">
+                            <div class="temp col">
+                                <h4>Tempurature</h4>
+                                <div class="temp" id="currentTemp"></div>
+                            </div>
+                            <div class="weather-item col" id="humidity">
+                                <h4>Humidity</h4>
+                                <div></div>
+                            </div>
+        
+                            <div class="weather-item col" id="pressure">
+                                <h4>Pressure</h4>
+                                <div></div>
+                            </div>
+        
+                            <div class="weather-item col" id="windSpeed">
+                                <h4>Wind Speed</h4>
+                                <div></div>
+                            </div>
+                        </div>
+    
+                        <div class="weather-container container justify-content-center">
+                            <img src="" alt="" class="weather-item" id="currentIcon">
+                            <h1 class="weather-item" id="summary"></h1>
+                        </div>
                     </div>
                 </div>
             </div>
+
+        </div>
+        <div class="future-container">
+            <h3>Future Forecast</h3>
+            <div class="future-forecast container row" id="futureForecast">
         </div>
 
-        <div class="future-forecast" id="futureForecast">
         </div>
     </div>
 
-    <script src="https://kit.fontawesome.com/2cc7bbc68a.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <script src="./assets/scripts/index.js"></script>
 </body>
 </html>
